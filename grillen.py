@@ -50,6 +50,7 @@ def summary():
             data = json.loads(read_data)
     else:
         initEmptyOrderFile()
+        data = "No orders!"
     return str(data)
 
 # TODO urgently needs to be reworked, this is just a temp way to reset
