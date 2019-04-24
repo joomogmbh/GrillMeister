@@ -8,10 +8,10 @@ Prinzipiell sind PR sehr willkommen und wir werden und beizeiten mit einer Richt
 ## Ausführen
 Bevor du das Projekt starten kannst solltest die in einer lokalen, virtuellen Umgebung die Abhängigkeiten installieren. Dann führe im GrillMeister Ordner folgende Commands aus (selbstverständlich solltest du dir einen Geheimschlüssel generieren und an der entsprechenden Stelle einfügen):
 
-´´´bash
+```bash
 export GRILLMEISTER_SECRET="your_grillmeister_secret"
 FLASK_APP=grillen.py python3 -m flask run
-´´´
+```
 
 Jetzt solltet ihr unter http://localhost:5000/grillen Bestellungen eintragen und unter http://localhost:5000/summary die Bestellungen in etwas unschönem stringified JSON als Übersicht sehen können.
 Vorübergehend ist es unter http://localhost:5000/delete möglich **alle Bestellungen zu löschen**. Dies ist ein Platzhalter, damit man über das Webinteface auch resetten kann. **ES WIRD NICHT UM BESTÄTIGUNG GEFRAGT, EINFACH GELÖSCHT!**
