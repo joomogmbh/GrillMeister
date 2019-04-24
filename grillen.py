@@ -15,7 +15,7 @@ app.config['SECRET_KEY'] = config.SECRET_KEY
 
 def initEmptyOrderFile():
     with open(config.BESTELLUNGEN_FILE, 'w') as f:
-        data = json.dumps({'bestellungen' : []})
+        data = json.dumps({})
         f.write(data)
 
 @app.route('/', methods=['GET'])
@@ -36,7 +36,8 @@ def wurstOrder():
             read_data = f.read()
             data = json.loads(read_data)
             f.seek(0)
-            data['bestellungen'].append(bestellung.getBestellungDict())
+            data[bestellung.getName()] = bestellung.getBestellungen()
+            #data['bestellungen'].append(bestellung.getBestellungDict())
             f.write(json.dumps(data))
 #        with open ('output.txt', 'a') as f:
 #            f.write(str(bestellung))
