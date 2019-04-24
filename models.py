@@ -8,5 +8,11 @@ class Bestellungen():
     def getBestellungDict(self):
         return {self.name : self.bestellungen}
         
+    def getName(self):
+        return self.name
+        
+    def getBestellungen(self):
+        return self.bestellungen      
+  
     def __str__(self):
         return str(self.name) + str(self.bestellungen)
