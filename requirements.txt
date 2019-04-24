@@ -1,2 +1,2 @@
 Flask
-wtf_forms
+flask_wtf
