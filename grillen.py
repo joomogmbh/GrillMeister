@@ -35,13 +35,14 @@ def wurstOrder():
         with open(config.BESTELLUNGEN_FILE, 'r+') as f:
             read_data = f.read()
             data = json.loads(read_data)
-            f.seek(0)
+            #f.seek(0)
             data[bestellung.getName()] = bestellung.getBestellungen()
             #data['bestellungen'].append(bestellung.getBestellungDict())
             f.write(json.dumps(data))
 #        with open ('output.txt', 'a') as f:
 #            f.write(str(bestellung))
-    return render_template('index.html', title='WURSTBESTELLUNG', form=form)
+        return render_template('index.html', bestellt=True, form=form)
+    return render_template('index.html', form=form)
 
 @app.route('/summary', methods=['GET'])
 def summary():
