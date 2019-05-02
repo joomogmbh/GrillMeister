@@ -35,7 +35,7 @@ def wurstOrder():
         with open(config.BESTELLUNGEN_FILE, 'r+') as f:
             read_data = f.read()
             data = json.loads(read_data)
-            #f.seek(0)
+            f.seek(0)
             data[bestellung.getName()] = bestellung.getBestellungen()
             #data['bestellungen'].append(bestellung.getBestellungDict())
             f.write(json.dumps(data))
@@ -50,7 +50,7 @@ def summary():
         with open(config.BESTELLUNGEN_FILE, 'r') as f:
             read_data = f.read()
             data = json.loads(read_data)
-    else:
+    elif not os.path.exists(config.BESTELLUNGEN_FILE):
         initEmptyOrderFile()
         data = "No orders!"
     return str(data)
