@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from forms import WurstOrderForm
+from forms import WurstOrderForm, DeleteOrderForm
 from models import Bestellungen
 import config
 
@@ -57,7 +57,17 @@ def summary():
     return str(data)
 
 # TODO urgently needs to be reworked, this is just a temp way to reset
-@app.route('/delete', methods=['GET'])
+@app.route('/delete', methods=['GET', 'POST'])
+def deleteOrderForm():
+    form=DeleteOrderForm(request.form)
+    if request.method == 'POST':
+        print(form.delete_secret.data)
+        print(form.confirm_delete.data)
+        if form.delete_secret.data == "Mettwoch" and form.confirm_delete.data:
+            return deleteOrders()
+        return "Hau ab!"
+    return render_template('delete_order.html', form=form)
+
 def deleteOrders():
     if os.path.exists(config.BESTELLUNGEN_FILE):
         os.remove(config.BESTELLUNGEN_FILE)

@@ -9,3 +9,9 @@ class WurstOrderForm(FlaskForm):
     schinkengriller = SelectField('Schinkengriller: 1,50€', choices=mycount, validators=[InputRequired()])
     selbstversorger = BooleanField('Bringe selber etwas!', default=False, validators=[InputRequired()])
     submit = SubmitField('Bestellen')
+    
+    
+class DeleteOrderForm(FlaskForm):
+    delete_secret = StringField('Parole', validators=[InputRequired()])
+    confirm_delete = BooleanField('Ich weiß was ich tue und will das löschen!', default=False, validators=[InputRequired()])
+    submit = SubmitField('Löschen!')
