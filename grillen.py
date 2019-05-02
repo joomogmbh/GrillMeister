@@ -32,10 +32,11 @@ def wurstOrder():
         # If there is currently not order JSON, initialize it
         if not os.path.exists(config.BESTELLUNGEN_FILE):
             initEmptyOrderFile()
-        with open(config.BESTELLUNGEN_FILE, 'r+') as f:
+        with open(config.BESTELLUNGEN_FILE, 'r') as f:
             read_data = f.read()
             data = json.loads(read_data)
-            f.seek(0)
+            #f.seek(0)
+        with open(config.BESTELLUNGEN_FILE, 'w') as f:
             data[bestellung.getName()] = bestellung.getBestellungen()
             #data['bestellungen'].append(bestellung.getBestellungDict())
             f.write(json.dumps(data))
