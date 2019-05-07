@@ -33,8 +33,7 @@ def wurstOrder():
         if not os.path.exists(config.BESTELLUNGEN_FILE):
             initEmptyOrderFile()
         with open(config.BESTELLUNGEN_FILE, 'r') as f:
-            read_data = f.read()
-            data = json.loads(read_data)
+            data = json.load(f)
             #f.seek(0)
         with open(config.BESTELLUNGEN_FILE, 'w') as f:
             data[bestellung.getName()] = bestellung.getBestellungen()
@@ -49,12 +48,21 @@ def wurstOrder():
 def summary():
     if os.path.exists(config.BESTELLUNGEN_FILE):
         with open(config.BESTELLUNGEN_FILE, 'r') as f:
-            read_data = f.read()
-            data = json.loads(read_data)
+            data = json.load(f) 
+        output = "Teilnehmer: %s<br><br>" % len(data)
+        for participant in sorted(data):
+            output += "<strong>%s:</strong> " % participant
+            for order in sorted(data[participant]):
+                output += "%s: %s, " % (order, data[participant][order])
+            output = output[:-2] + "<br>"
+        output += "<br>"
+        order_possibilities = data[participant]
+        for order in sorted(order_possibilities):
+            output += "%s: %s<br>" % (order, sum([int(data[x][order]) for x in data]))
     elif not os.path.exists(config.BESTELLUNGEN_FILE):
         initEmptyOrderFile()
-        data = "No orders!"
-    return str(data)
+        output = "No orders!"
+    return str(output)
 
 # TODO urgently needs to be reworked, this is just a temp way to reset
 @app.route('/delete', methods=['GET', 'POST'])
