@@ -1,3 +1,4 @@
+#encoding=utf-8
 from flask_wtf import FlaskForm
 from wtforms import Form, StringField, SubmitField, SelectField, BooleanField
 from wtforms.validators import InputRequired
@@ -7,6 +8,7 @@ class WurstOrderForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired()])
     bratwurst = SelectField('Bratwurst: 1€', choices=mycount, validators=[InputRequired()])
     schinkengriller = SelectField('Schinkengriller: 1,50€', choices=mycount, validators=[InputRequired()])
+    broetchen = BooleanField("Willste Brötchen?", default=True, validators=[InputRequired()])
     selbstversorger = BooleanField('Bringe selber etwas!', default=False, validators=[InputRequired()])
     submit = SubmitField('Bestellen')
     

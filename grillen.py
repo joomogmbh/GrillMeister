@@ -1,22 +1,43 @@
+#encoding=utf-8
 from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
 
 from forms import WurstOrderForm, DeleteOrderForm
 from models import Bestellungen
 import config
 
-# TODO switch to a light DB, instead of json
-import json
 import os
 
-
+#TODO: Nachträgliche Änderungen der getätigten Bestellungen
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config.SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
+db = SQLAlchemy(app)
+
+class DB_Bestellungen(db.Model):
+    __tablename__ = 'bestellungen'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), unique=True, nullable=False)
+    bratwurst = db.Column(db.Integer)
+    schinkengriller = db.Column(db.Integer)
+    broetchen = db.Column(db.Boolean, default=True)
+    selbstversorger = db.Column(db.Boolean, default=False)
+    
+    def __init__(self, name, bratwurst, schinkengriller, broetchen, selbstversorger):
+        self.name = name
+        self.bratwurst = bratwurst
+        self.schinkengriller = schinkengriller
+        self.broetchen = broetchen
+        self.selbstversorger = selbstversorger
+        
+    def __repr__(self):
+        #return 'Name: %s Bratwurst: %s Schinkengriller: %s Broetchen: %s Selbstversorger: %s' % (self.name, self.bratwurst, self.schinkengriller, self.broetchen, self.selbstversorger)
+        return str({self.name: {"Bratwurst":self.bratwurst,"Schinkengriller":self.schinkengriller,"Brötchen":self.broetchen,"Selbstversorger":self.selbstversorger}})
 
 def initEmptyOrderFile():
-    with open(config.BESTELLUNGEN_FILE, 'w') as f:
-        data = json.dumps({})
-        f.write(data)
+    db.create_all()
 
 @app.route('/', methods=['GET'])
 def index():
@@ -27,44 +48,36 @@ def wurstOrder():
     form=WurstOrderForm(request.form)
     print('Valid input: ' + str(form.validate()))
     if request.method == 'POST':
-        kunstdarm = {'bratwurst': form.bratwurst.data, 'schinkengriller': form.schinkengriller.data, 'selbstversorger': form.selbstversorger.data}
-        bestellung = Bestellungen(form.name.data, kunstdarm)
-        # If there is currently not order JSON, initialize it
         if not os.path.exists(config.BESTELLUNGEN_FILE):
             initEmptyOrderFile()
-        with open(config.BESTELLUNGEN_FILE, 'r') as f:
-            data = json.load(f)
-            #f.seek(0)
-        with open(config.BESTELLUNGEN_FILE, 'w') as f:
-            data[bestellung.getName()] = bestellung.getBestellungen()
-            #data['bestellungen'].append(bestellung.getBestellungDict())
-            f.write(json.dumps(data))
-#        with open ('output.txt', 'a') as f:
-#            f.write(str(bestellung))
+        new_order = DB_Bestellungen(name=form.name.data, bratwurst=form.bratwurst.data, schinkengriller=form.schinkengriller.data, broetchen=form.broetchen.data, selbstversorger=form.selbstversorger.data)
+        db.session.add(new_order)
+        db.session.commit()
         return render_template('index.html', bestellt=True, form=form)
     return render_template('index.html', form=form)
 
 @app.route('/summary', methods=['GET'])
 def summary():
     if os.path.exists(config.BESTELLUNGEN_FILE):
-        with open(config.BESTELLUNGEN_FILE, 'r') as f:
-            data = json.load(f) 
-        output = "Teilnehmer: %s<br><br>" % len(data)
-        for participant in sorted(data):
-            output += "<strong>%s:</strong> " % participant
-            for order in sorted(data[participant]):
-                output += "%s: %s, " % (order, data[participant][order])
-            output = output[:-2] + "<br>"
-        output += "<br>"
-        order_possibilities = data[participant]
-        for order in sorted(order_possibilities):
-            output += "%s: %s<br>" % (order, sum([int(data[x][order]) for x in data]))
+        #data = eval(DB_Bestellungen.query.all())
+        #output = "Teilnehmer: %s<br><br>" % len(DB_Bestellungen.query.all())
+        #for participant in DB_Bestellungen.query.all():
+         ##   participant = eval(str(participant))
+         #   for key, value in participant.items():
+         #       output += "<strong>%s</strong>: %s" % (key, value)
+        #    output += "<br>"
+        #output += "<br>"
+        #for key, value in participant.items():
+         #   output += "Value: %s" % ([key for key in value.values[key]])
+       # print(output)
+        print(db.select([DB_Bestellungen]).where(DB_Bestellungen.column.bratwurst == 0))
+                                
+                
     elif not os.path.exists(config.BESTELLUNGEN_FILE):
-        initEmptyOrderFile()
+        #initEmptyOrderFile()
         output = "No orders!"
     return str(output)
 
-# TODO urgently needs to be reworked, this is just a temp way to reset
 @app.route('/delete', methods=['GET', 'POST'])
 def deleteOrderForm():
     form=DeleteOrderForm(request.form)

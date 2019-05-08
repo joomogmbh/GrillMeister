@@ -10,6 +10,7 @@ Bevor du das Projekt starten kannst solltest die in einer lokalen, virtuellen Um
 
 ```bash
 export GRILLMEISTER_SECRET="your_grillmeister_secret"
+export DATABASE_URL="sqlite:////home/pi/Development/GrillMeister/bestellungen.db"
 FLASK_APP=grillen.py python3 -m flask run
 ```
 
