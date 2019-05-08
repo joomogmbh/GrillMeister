@@ -56,25 +56,26 @@ def wurstOrder():
         return render_template('index.html', bestellt=True, form=form)
     return render_template('index.html', form=form)
 
+    #TODO: Fehler bei ungültiger Eingabe (alles 0; brötchen ohne was anderes)
+
 @app.route('/summary', methods=['GET'])
 def summary():
     if os.path.exists(config.BESTELLUNGEN_FILE):
-        #data = eval(DB_Bestellungen.query.all())
-        #output = "Teilnehmer: %s<br><br>" % len(DB_Bestellungen.query.all())
-        #for participant in DB_Bestellungen.query.all():
-         ##   participant = eval(str(participant))
-         #   for key, value in participant.items():
-         #       output += "<strong>%s</strong>: %s" % (key, value)
-        #    output += "<br>"
-        #output += "<br>"
-        #for key, value in participant.items():
-         #   output += "Value: %s" % ([key for key in value.values[key]])
-       # print(output)
-        print(db.select([DB_Bestellungen]).where(DB_Bestellungen.column.bratwurst == 0))
-                                
-                
+        request = db.session.execute("SELECT * FROM bestellungen")
+        output = ""
+        for x in request.fetchall():
+            for y in range(1, len(request.keys())):
+                output +=  "<strong>%s</strong>: %s " % (request.keys()[y], x[y])
+            output += "<br>"
+        output += "<br>Teilnehmeranzahl: %s<br><br>" % x[0]
+        
+        for key in request.keys()[2:]:
+            output += "%s: %s<br>" % (key, db.session.execute("SELECT SUM(%s) FROM bestellungen" % key).fetchall()[0][0]) #execute funktionert; sum rechnet alle zuammen, [0][0] "entfernt" die liest und tuple
+         
+        #TODO: Richtiger Brötchenzähler
+        #TODO: Schöner machen
+         
     elif not os.path.exists(config.BESTELLUNGEN_FILE):
-        #initEmptyOrderFile()
         output = "No orders!"
     return str(output)
 
