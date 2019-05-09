@@ -22,7 +22,7 @@ class DB_Bestellungen(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
     bratwurst = db.Column(db.Integer)
     schinkengriller = db.Column(db.Integer)
-    broetchen = db.Column(db.Boolean, default=True)
+    broetchen = db.Column(db.Integer, default=True)
     selbstversorger = db.Column(db.Boolean, default=False)
     
     def __init__(self, name, bratwurst, schinkengriller, broetchen, selbstversorger):
@@ -50,7 +50,7 @@ def wurstOrder():
     if request.method == 'POST':
         if not os.path.exists(config.BESTELLUNGEN_FILE):
             initEmptyOrderFile()
-        new_order = DB_Bestellungen(name=form.name.data, bratwurst=form.bratwurst.data, schinkengriller=form.schinkengriller.data, broetchen=form.broetchen.data, selbstversorger=form.selbstversorger.data)
+        new_order = DB_Bestellungen(name=form.name.data, bratwurst=form.bratwurst.data, schinkengriller=form.schinkengriller.data, broetchen=form.broetchen.data*(int(form.bratwurst.data)+int(form.schinkengriller.data)), selbstversorger=form.selbstversorger.data)
         db.session.add(new_order)
         db.session.commit()
         return render_template('index.html', bestellt=True, form=form)
