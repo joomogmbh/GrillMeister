@@ -1,0 +1,29 @@
+{% block content %}
+    <h1>WURSTTHEKE</h1>
+    <form action="" method="post" novalidate>
+        <p>
+            	{{ form.name.label }}<br>
+            	{{ form.name(size=15) }}
+        </p>
+	    <p>
+	    	    {{ form.bratwurst.label }}<br>
+		        {{ form.bratwurst }}
+	    </p>
+	    <p>
+	    	    {{ form.schinkengriller.label }}<br>
+		        {{ form.schinkengriller }}
+	    </p>
+	    <p>
+	            {{ form.broetchen.label }} <br>
+	            {{ form.broetchen }}
+	    </p>
+	    <p>
+	    	    {{ form.selbstversorger.label }}<br>
+		        {{ form.selbstversorger }}
+	    </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% if bestellt %}
+	<p>Bestellungen wurden entgegenommen.</p>
+    {% endif %}
+{% endblock %}
