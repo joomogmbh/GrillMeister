@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    {#<link rel="stylesheet" href="style.css" />#}
+    <title>Grillmeister</title>
+    {% endblock %}
+</head>
+<body>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+        {% block footer %}
+        &copy; This website's code is MIT licensed, and is available <a href="https://github.com/joomogmbh/GrillMeister">here.</a>.
+        {% endblock %}
+    </div>
+</body>
+</html>
