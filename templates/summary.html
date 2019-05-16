@@ -1,0 +1,17 @@
+{% block content %}
+    <h1>Bestellungen</h1>
+        <table border=1>
+            <tr>
+            {% for key in keys %}
+                <th> {{ key }} </th>
+            {% endfor %}
+            </tr>
+            {% for entry in entries %}
+            <tr>
+                {% for elem in entry %}
+                    <td> {{ elem }} </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+{% endblock %}

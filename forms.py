@@ -23,3 +23,4 @@ class DeleteOrderForm(FlaskForm):
     delete_secret = StringField('Parole', validators=[InputRequired()])
     confirm_delete = BooleanField('Ich weiß was ich tue und will das löschen!', default=False, validators=[InputRequired()])
     submit = SubmitField('Löschen!')
+

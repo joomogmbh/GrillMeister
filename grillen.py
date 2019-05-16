@@ -91,23 +91,33 @@ def wurstOrder():
 @app.route('/summary', methods=['GET'])
 def summary():
     if os.path.exists(config.BESTELLUNGEN_FILE):
-        request = db.session.execute("SELECT * FROM bestellungen")
-        output = ""
-        for x in request.fetchall():
-            for y in range(1, len(request.keys())):
-                output +=  "<strong>%s</strong>: %s " % (request.keys()[y], x[y])
-            output += "<br>"
-        output += "<br>Teilnehmeranzahl: %s<br><br>" % x[0]
+        #namen = db.session.execute("SELECT name FROM bestellungen")
+        #bestellungen = db.session.execute("SELECT bratwurst FROM bestellungen")
+        #output = ""
+        db_req = db.session.execute("SELECT * FROM bestellungen")
+        keys = db_req.keys()
+        entries = db_req.fetchall()
+        print(keys)
+        print(entries)
+        #for x in namen.fetchall():
+        #    name += "%s" % (x)
+        #for y in bestellungen.fetchall():
+        #    bestellung += "%s" % (y)
+        #        output +=  "<strong>%s</strong>: %s " % (request.keys()[y], x[y])
+        #    output += "<br>"
+        #output += "<br>Teilnehmeranzahl: %s<br><br>" % x[0]
         
-        for key in request.keys()[2:]:
-            output += "%s: %s<br>" % (key, db.session.execute("SELECT SUM(%s) FROM bestellungen" % key).fetchall()[0][0]) #execute funktionert; sum rechnet alle zuammen, [0][0] "entfernt" die liest und tuple
+        #for key in request.keys()[2:]:
+        #    output += "%s: %s<br>" % (key, db.session.execute("SELECT SUM(%s) FROM bestellungen" % key).fetchall()[0][0]) #execute funktionert; sum rechnet alle zuammen, [0][0] "entfernt" die liest und tuple
          
         #TODO: Richtiger Brötchenzähler
         #TODO: Schöner machen
-         
+        return render_template('summary.html', keys=keys, entries=entries)
+    
     elif not os.path.exists(config.BESTELLUNGEN_FILE):
-        output = "No orders!"
-    return str(output)
+        return "No orders!"
+    #return str(output)
+    
 
 @app.route('/delete', methods=['GET', 'POST'])
 def deleteOrderForm():
