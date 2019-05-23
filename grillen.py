@@ -1,6 +1,6 @@
 #encoding=utf-8
 from flask import Flask, render_template, request
-
+from sqlalchemy import update
 from forms import WurstOrderForm, DeleteOrderForm, IndexForm
 
 import config
@@ -44,12 +44,15 @@ def wurstOrder():
         if not os.path.exists(config.BESTELLUNGEN_FILE):
             initEmptyDatabases()
         new_order = DB_Bestellungen(name=form.name.data, bratwurst=form.bratwurst.data, schinkengriller=form.schinkengriller.data, broetchen=form.broetchen.data*(int(form.bratwurst.data)+int(form.schinkengriller.data)), selbstversorger=form.selbstversorger.data)
-        db.session.add(new_order)
+        if DB_Bestellungen.query.filter(DB_Bestellungen.name == form.name.data).one_or_none():
+            db.session.query(DB_Bestellungen).filter(DB_Bestellungen.name == form.name.data).update({DB_Bestellungen.bratwurst: form.bratwurst.data, DB_Bestellungen.broetchen: form.broetchen.data*(int(form.bratwurst.data)+int(form.schinkengriller.data)), DB_Bestellungen.schinkengriller: form.schinkengriller.data, DB_Bestellungen.selbstversorger: form.selbstversorger.data})
+        else:
+            db.session.add(new_order)
         db.session.commit()
+        
         return render_template('order.html', bestellt=True, form=form)
     return render_template('order.html', form=form)
 
-    #TODO: Fehler bei ungültiger Eingabe (alles 0; brötchen ohne was anderes)
 
 @app.route('/summary', methods=['GET'])
 def summary():
@@ -80,7 +83,8 @@ def summary():
     elif not os.path.exists(config.BESTELLUNGEN_FILE):
         return "No orders!"
     #return str(output)
-    
+
+        
 
 @app.route('/delete', methods=['GET', 'POST'])
 def deleteOrderForm():

@@ -17,6 +17,7 @@ class WurstOrderForm(FlaskForm):
     broetchen = BooleanField("Willste Brötchen?", default=True, validators=[InputRequired()])
     selbstversorger = BooleanField('Bringe selber etwas!', default=False, validators=[InputRequired()])
     submit = SubmitField('Bestellen')
+    reset = SubmitField('Reset')
     
     
 class DeleteOrderForm(FlaskForm):
