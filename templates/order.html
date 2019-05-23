@@ -1,6 +1,50 @@
 {% block content %}
+<head>
+		<script>
+			function showBrotField(){
+				if(document.getElementById('checkbox_brot').checked){
+					document.getElementById('brot').style.display = 'block';
+				} else {
+					document.getElementById('brot').style.display = 'none';				
+				}			
+			}
+		</script>
+<head>
     <h1>WURSTTHEKE</h1>
     <form action="" method="post" novalidate>
+    
+        <table>
+            <tr>
+                <td>{{ form.name.label }}</td>
+                <td>{{ form.name(size=15) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.bratwurst.label }}</td>
+                <td>{{ form.bratwurst }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.schinkengriller.label }}</td>
+                <td>{{ form.schinkengriller }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.broetchen.label }}</td>
+                <td><input id="checkbox_brot" type="checkbox" name="willst_du_broetchen"    	
+		            onchange="showBrotField()"></td>
+		        <td><input id="brot" type="input" name="broetchen_anzahl" 
+		            placeholder="Wieviele?" hidden></td>
+            </tr>
+            <tr>
+                <td>{{ form.selbstversorger.label }}</td>
+                <td>{{ form.selbstversorger }}</td>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.submit() }} 
+                    <input type="reset" name="test" value="Reset">
+                </td>
+            </tr>
+        </table>    
+        <!---------------------------------------------------->
         <p>
             	{{ form.name.label }}<br>
             	{{ form.name(size=15) }}
@@ -15,7 +59,11 @@
 	    </p>
 	    <p>
 	            {{ form.broetchen.label }} <br>
-	            {{ form.broetchen }}
+	            <!--{{ form.broetchen }} -->
+	            <input id="checkbox_brot" type="checkbox" name="willst_du_broetchen"    	
+		            onchange="showBrotField()"> 
+		        <input id="brot" type="input" name="broetchen_anzahl" 
+		            placeholder="Wieviele?" hidden>
 	    </p>
 	    <p>
 	    	    {{ form.selbstversorger.label }}<br>
