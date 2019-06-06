@@ -39,6 +39,19 @@ def index():
         return render_template('index.html', created=True, form=form)
     return render_template('index.html', form=form)
 
+@app.route("/events", methods=["GET"])
+def events():
+    if os.path.exists(config.BESTELLUNGEN_FILE):
+        db_req = db.session.execute("SELECT * FROM events")
+        keys = db_req.keys()
+        entries = db_req.fetchall()
+        print(keys)
+        print(entries)
+        return render_template('summary.html', keys=keys, entries=entries, title="Events")
+    
+    
+    return "No events!"
+
 @app.route('/grillen', methods=['GET', 'POST'])
 def wurstOrder():
     form=WurstOrderForm(request.form)
@@ -101,7 +114,7 @@ def summary():
          
         #TODO: Richtiger Brötchenzähler
         #TODO: Schöner machen
-        return render_template('summary.html', keys=keys, entries=entries)
+        return render_template('summary.html', keys=keys, entries=entries, title="Bestellungen")
     
     elif not os.path.exists(config.BESTELLUNGEN_FILE):
         return "No orders!"
