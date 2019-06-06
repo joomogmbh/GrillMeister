@@ -1,11 +1,12 @@
 #encoding=utf-8
 from flask_wtf import FlaskForm
-from wtforms import Form, StringField, SubmitField, SelectField, BooleanField, DateField
+from wtforms import Form, StringField, SubmitField, SelectField, BooleanField#, DateField
 from wtforms.validators import InputRequired
+from wtforms.fields.html5 import DateField
 
 class IndexForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired()])
-    date = DateField("Datum", validators=[InputRequired()])
+    date = DateField("Datum", format='%Y-%m-%d',validators=[InputRequired()])
     offer = StringField("Essensliste", validators=[InputRequired()])
     submit = SubmitField('Erstellen')
 
