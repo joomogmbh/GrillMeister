@@ -64,6 +64,22 @@ def summary():
         keys = db_req.keys()
         entries = db_req.fetchall()
         print(keys)
+        
+        totals = []
+        for i, key in enumerate(keys):
+            if key == 'id':
+                totals.append("")
+                continue
+            elif key == 'name':
+                totals.append("Total")
+                continue
+            total = 0
+            for entry in entries:
+                total = total + entry[i]
+            totals.append(total)
+
+        totals = tuple(totals)
+        entries.append(totals)
         print(entries)
         #for x in namen.fetchall():
         #    name += "%s" % (x)
