@@ -1,5 +1,29 @@
 {% block content %}
 <head>
+		<!--<link rel="stylesheet" type="text/css" 
+		href="{{ url_for('static', filename='order.css') }}">-->
+		<style>
+/*			#order_table td, #order_table th {
+	border: 1px, solid #ddd;
+	padding: 8px;
+}
+
+#order_table tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+#order_table tr:hover {
+	background-color: #ddd;
+}
+
+#order_table th {
+ padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;cs
+*/}
+		</style>
 		<script>
 			function showBrotField(){
 				if(document.getElementById('checkbox_brot').checked){
@@ -13,7 +37,7 @@
     <h1>WURSTTHEKE</h1>
     <form action="" method="post" novalidate>
     
-        <table>
+        <table id="order_table">
             <tr>
                 <td>{{ form.name.label }}</td>
                 <td>{{ form.name(size=15) }}</td>
@@ -30,7 +54,7 @@
                 <td>{{ form.broetchen.label }}</td>
                 <td><input id="checkbox_brot" type="checkbox" name="willst_du_broetchen"    	
 		            onchange="showBrotField()"></td>
-		        <td><input id="brot" type="input" name="broetchen_anzahl" 
+	          <td><input id="brot" type="input" name="broetchen" 
 		            placeholder="Wieviele?" hidden></td>
             </tr>
             <tr>
@@ -45,7 +69,7 @@
             </tr>
         </table>    
         <!---------------------------------------------------->
-        <p>
+    <!--    <p>
             	{{ form.name.label }}<br>
             	{{ form.name(size=15) }}
         </p>
@@ -59,7 +83,7 @@
 	    </p>
 	    <p>
 	            {{ form.broetchen.label }} <br>
-	            <!--{{ form.broetchen }} -->
+	            <!--{{ form.broetchen }} 
 	            <input id="checkbox_brot" type="checkbox" name="willst_du_broetchen"    	
 		            onchange="showBrotField()"> 
 		        <input id="brot" type="input" name="broetchen_anzahl" 
@@ -71,6 +95,7 @@
 	    </p>
         <p>{{ form.submit() }}</p>
         <input type="reset" name="test" value="Reset">
+	-->
     </form>
     {% if bestellt %}
 	<p>Bestellungen wurden entgegenommen.</p>

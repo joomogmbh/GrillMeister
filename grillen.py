@@ -9,9 +9,12 @@ import os
 
 #TODO: Nachträgliche Änderungen der getätigten Bestellungen
 
-app = Flask(__name__)
+STATIC_DIR = os.path.abspath("../static")
+
+app = Flask(__name__, static_folder=STATIC_DIR)
 app.config['SECRET_KEY'] = config.SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
+
 
 # import models AFTER app is initiatlized
 from models import db, DB_Bestellungen, DB_Events
@@ -43,7 +46,11 @@ def wurstOrder():
     if request.method == 'POST':
         if not os.path.exists(config.BESTELLUNGEN_FILE):
             initEmptyDatabases()
-        new_order = DB_Bestellungen(name=form.name.data, bratwurst=form.bratwurst.data, schinkengriller=form.schinkengriller.data, broetchen=form.broetchen.data*(int(form.bratwurst.data)+int(form.schinkengriller.data)), selbstversorger=form.selbstversorger.data)
+        new_order = DB_Bestellungen(name=form.name.data,
+                                    bratwurst=form.bratwurst.data,
+                                    schinkengriller=form.schinkengriller.data,
+                                    broetchen= (int(form.broetchen.data)),  #*(int(form.bratwurst.data)+int(form.schinkengriller.data)),
+                                    selbstversorger=form.selbstversorger.data)
         if DB_Bestellungen.query.filter(DB_Bestellungen.name == form.name.data).one_or_none():
             db.session.query(DB_Bestellungen).filter(DB_Bestellungen.name == form.name.data).update({DB_Bestellungen.bratwurst: form.bratwurst.data, DB_Bestellungen.broetchen: form.broetchen.data*(int(form.bratwurst.data)+int(form.schinkengriller.data)), DB_Bestellungen.schinkengriller: form.schinkengriller.data, DB_Bestellungen.selbstversorger: form.selbstversorger.data})
         else:
