@@ -39,7 +39,7 @@
     <h1>WURSTTHEKE</h1>
     <form action="" method="post" novalidate>
     
-        <table id="order_table">
+        <table>
             <tr>
                 <td>{{ form.name.label }}</td>
                 <td>{{ form.name(size=15) }}</td>
@@ -53,9 +53,16 @@
                 <td>{{ form.schinkengriller }}</td>
             </tr>
             <tr>
-                <td>{{ form.broetchen.label }}</td>
-                <td><input id="checkbox_brot" type="checkbox" name="willst_du_broetchen"    	
-		            onchange="showBrotField()"></td>
+			<td>{{ form.broetchen.label }}</td>
+                	<td>
+				<label class="container">
+					<input id="checkbox_brot" type="checkbox" 
+						name="willst_du_broetchen"    	
+				            onchange="showBrotField()">
+					<span class="checkmark"></span>
+				</label>
+			</td>
+			
 	          <td><input id="brot" type="input" name="broetchen" 
 		            placeholder="Wieviele?" hidden></td>
             </tr>
