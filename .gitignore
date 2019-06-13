@@ -106,3 +106,7 @@ venv.bak/
 # ignore orders.json file
 bestellungen.json
 *.db
+
+.project
+.pydevproject
+.settings/

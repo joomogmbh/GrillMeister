@@ -1,6 +1,8 @@
 import grillen
 from flask_sqlalchemy import SQLAlchemy
 
+
+
 print(dir(grillen))
 db = SQLAlchemy(grillen.app)
         
