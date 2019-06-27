@@ -15,13 +15,15 @@ class DB_Bestellungen(db.Model):
     schinkengriller = db.Column(db.Integer)
     broetchen = db.Column(db.Integer, default=True)
     selbstversorger = db.Column(db.Boolean, default=False)
+    event_id = db.Column(db.ForeignKey('events.id'), nullable=False)
     
-    def __init__(self, name, bratwurst, schinkengriller, broetchen, selbstversorger):
+    def __init__(self, name, bratwurst, schinkengriller, broetchen, selbstversorger, event_id):
         self.name = name
         self.bratwurst = bratwurst
         self.schinkengriller = schinkengriller
         self.broetchen = broetchen
         self.selbstversorger = selbstversorger
+        self.event_id = event_id
         
     def __repr__(self):
         #return 'Name: %s Bratwurst: %s Schinkengriller: %s Broetchen: %s Selbstversorger: %s' % (self.name, self.bratwurst, self.schinkengriller, self.broetchen, self.selbstversorger)

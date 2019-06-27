@@ -24,6 +24,10 @@ from models import db, DB_Bestellungen, DB_Events
 def initEmptyDatabases():
     db.create_all()
 
+def get_event_id_for_date(event_date):
+    # TODO retrieve the event id for a given date
+    return 1
+
 @app.route('/', methods=['GET', "POST"])
 def index():
     form=IndexForm(request.form)
@@ -83,6 +87,41 @@ def wurstOrder():
                 DB_Bestellungen.broetchen: form.broetchen.data*(int(form.bratwurst.data)+int(form.schinkengriller.data)),
                 DB_Bestellungen.schinkengriller: form.schinkengriller.data,
                 DB_Bestellungen.selbstversorger: form.selbstversorger.data})
+        else:
+            db.session.add(new_order)
+        db.session.commit()
+        
+        return render_template('order.html', bestellt=True, form=form)
+    return render_template('order.html', form=form)
+
+@app.route('/grillen/<event_date>', methods=['GET', 'POST'])
+def eventFoodOrder(event_date):
+    form=WurstOrderForm(request.form)
+    print('Valid input: ' + str(form.validate()))
+    if request.method == 'POST':
+        if not os.path.exists(config.BESTELLUNGEN_FILE):
+            initEmptyDatabases()
+        
+        # if broetchen is 0 you cannot cast to int
+        try:
+            broetchen = int(form.broetchen.data)
+        except:
+            broetchen = 0
+            
+        new_order = DB_Bestellungen(name=form.name.data,
+                                    bratwurst=form.bratwurst.data,
+                                    schinkengriller=form.schinkengriller.data,
+                                    broetchen= broetchen,# (int(form.broetchen.data)),  #*(int(form.bratwurst.data)+int(form.schinkengriller.data)),
+                                    selbstversorger=form.selbstversorger.data,
+                                    event_id=get_event_id_for_date(event_date))
+        
+        if DB_Bestellungen.query.filter(DB_Bestellungen.name == form.name.data).one_or_none():
+            db.session.query(DB_Bestellungen).filter(DB_Bestellungen.name == form.name.data).update({
+                DB_Bestellungen.bratwurst: form.bratwurst.data,
+                DB_Bestellungen.broetchen: form.broetchen.data*(int(form.bratwurst.data)+int(form.schinkengriller.data)),
+                DB_Bestellungen.schinkengriller: form.schinkengriller.data,
+                DB_Bestellungen.selbstversorger: form.selbstversorger.data,
+                DB_Bestellungen.event_id: get_event_id_for_date(event_date)})
         else:
             db.session.add(new_order)
         db.session.commit()
