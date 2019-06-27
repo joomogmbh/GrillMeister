@@ -3,21 +3,17 @@
 {% block content %}
     <h1>Eventerstellung</h1>
     <form action="" method="post" novalidate>
-        <p>
-            	{{ form.name.label }}<br>
-            	{{ form.name(size=15) }}
-        </p>
 	    <p>
 	    	    {{ form.date.label }}<br>
 		        {{ form.date }}
 	    </p>
 	    <p>
-	    	    {{ form.offer.label }}<br>
-		        {{ form.offer(size=15) }}
+	    	    {{ form.organizer.label }}<br>
+		        {{ form.organizer(size=15) }}
 	    </p>
         <p>{{ form.submit() }}</p>
     </form>
-    {% if created %}
-	<p>Event wurde erstellt.</p>
+    {% if msg %}
+	<p>{{ msg }}</p>
     {% endif %}
 {% endblock %}

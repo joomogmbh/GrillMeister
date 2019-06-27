@@ -1,6 +1,7 @@
 #encoding=utf-8
 from flask import Flask, render_template, request
 from sqlalchemy import update
+from sqlalchemy.exc import IntegrityError
 from forms import WurstOrderForm, DeleteOrderForm, IndexForm
 
 import config
@@ -31,13 +32,16 @@ def index():
             initEmptyDatabases()
         #create event
         #create new Database or une database
-        new_event = DB_Events(name=form.name.data, date=form.date.data, offer=form.offer.data)
-        db.session.add(new_event)
-        db.session.commit()
-        
-        #TODO: Datenbank umbenennen, config anpassen, Datenbank testen
-        
-        return render_template('index.html', created=True, form=form)
+        try:
+            new_event = DB_Events(date=form.date.data, organizer=form.organizer.data)
+            db.session.add(new_event)
+            db.session.commit()
+            
+            #TODO: Datenbank umbenennen, config anpassen, Datenbank testen
+            
+            return render_template('index.html', msg="Event wurde erstellt.", form=form)
+        except IntegrityError:
+            return render_template('index.html', msg="An event for this date already exists!", form=form) 
     return render_template('index.html', form=form)
 
 @app.route("/events", methods=["GET"])

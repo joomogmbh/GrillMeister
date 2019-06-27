@@ -5,9 +5,8 @@ from wtforms.validators import InputRequired
 from wtforms.fields.html5 import DateField
 
 class IndexForm(FlaskForm):
-    name = StringField('Name', validators=[InputRequired()])
     date = DateField("Datum", format='%Y-%m-%d',validators=[InputRequired()])
-    offer = StringField("Essensliste", validators=[InputRequired()])
+    organizer = StringField("Organisiert von: ", validators=[InputRequired()])
     submit = SubmitField('Erstellen')
 
 class WurstOrderForm(FlaskForm):

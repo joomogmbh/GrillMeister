@@ -31,14 +31,15 @@ class DB_Events(db.Model):
     __tablename__ = 'events'
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), unique=True, nullable=False)
+    # XXX Why doe events need names, and why do they need to be unique??
+    # unique date should suffice :) -AD
+    # name = db.Column(db.String(20), unique=True, nullable=False)
     date = db.Column(db.Date, unique=True)
-    offer = db.Column(db.String)
+    organizer = db.Column(db.String)
     
-    def __init__(self, name, date, offer):
-        self.name = name
+    def __init__(self, date, organizer):
         self.date = date
-        self.offer = offer
-        
+        self.organizer = organizer
+
     def __repr__(self):
-        return "Events"
+        return "Events"  # TODO what is the purpose of this, can it be removed? -AD
