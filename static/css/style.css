@@ -24,6 +24,18 @@
 	padding: 6px;	
 }
 
+#footer {
+  position: fixed;
+  float: left;
+  padding: 10px;
+  bottom: 0;
+  width: 100%;
+}
+
+.contDiv {
+  margin: 10px;
+}
+
 /* Customize the label (the container) 
 .container {
 	display: block;

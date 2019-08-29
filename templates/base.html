@@ -2,16 +2,47 @@
 <html lang="en">
 <head>
     {% block head %}
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}" media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>GrillMeister</title>
     {% endblock %}
 </head>
-<body>
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">
+<body class="red lighten-5">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+    <nav>
+      <div class="nav-wrapper">      
+          <a href="#!" class="brand-logo">
+            <h4 class="valign-wrapper wurstappLogo" style="margin: 0 20px 20px 20px">
+              <i class="large material-icons">local_bar</i>
+                Wurstapp 
+              <i class="large material-icons right">local_dining</i>
+            </h4>
+          </a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="/">create Event</a></li>
+            <li><a href="events">events</a></li>
+            <li><a href="summary">summary</a></li>
+            <li><a href="grillen">grillen</a></li>
+            <li><a href="delete">delete orders</a></li>
+          </ul>
+      </div>
+    </nav>
+    <div id="content">
+      <div class="contDiv">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    <footer id="footer" class="footer-copyright red lighten-1 z-depth-5">
+      <div class="contDiv">
         {% block footer %}
         &copy; This website's code is MIT licensed, and is available <a href="https://github.com/joomogmbh/GrillMeister">here.</a>
         {% endblock %}
-    </div>
+      </div>
+    </footer>
 </body>
 </html>
