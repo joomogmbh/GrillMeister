@@ -26,7 +26,22 @@ def initEmptyDatabases():
 
 def get_event_id_for_date(event_date):
     # TODO retrieve the event id for a given date
-    return 1
+    if os.path.exists(config.BESTELLUNGEN_FILE):
+        db_req = db.session.execute("SELECT * FROM events")
+        keys = db_req.keys()
+        entries = db_req.fetchall()
+        id_index = None
+        date_index = None
+        for i, key in enumerate(keys):
+            if key == 'id':
+                id_index = i  # remembers the location of id
+            elif key == 'date':
+                date_index = i
+        for entry in entries:
+            if entry[date_index] == event_date:
+                return entry[id_index]
+    else:
+        raise Exception("DB available!")
 
 @app.route('/', methods=['GET', "POST"])
 def index():
@@ -62,37 +77,8 @@ def events():
     return "No events!"
 
 @app.route('/grillen', methods=['GET', 'POST'])
-def wurstOrder():
-    form=WurstOrderForm(request.form)
-    print('Valid input: ' + str(form.validate()))
-    if request.method == 'POST':
-        if not os.path.exists(config.BESTELLUNGEN_FILE):
-            initEmptyDatabases()
-        
-        # if broetchen is 0 you cannot cast to int
-        try:
-            broetchen = int(form.broetchen.data)
-        except:
-            broetchen = 0
-            
-        new_order = DB_Bestellungen(name=form.name.data,
-                                    bratwurst=form.bratwurst.data,
-                                    schinkengriller=form.schinkengriller.data,
-                                    broetchen= broetchen,# (int(form.broetchen.data)),  #*(int(form.bratwurst.data)+int(form.schinkengriller.data)),
-                                    selbstversorger=form.selbstversorger.data)
-        
-        if DB_Bestellungen.query.filter(DB_Bestellungen.name == form.name.data).one_or_none():
-            db.session.query(DB_Bestellungen).filter(DB_Bestellungen.name == form.name.data).update({
-                DB_Bestellungen.bratwurst: form.bratwurst.data,
-                DB_Bestellungen.broetchen: form.broetchen.data*(int(form.bratwurst.data)+int(form.schinkengriller.data)),
-                DB_Bestellungen.schinkengriller: form.schinkengriller.data,
-                DB_Bestellungen.selbstversorger: form.selbstversorger.data})
-        else:
-            db.session.add(new_order)
-        db.session.commit()
-        
-        return render_template('order.html', bestellt=True, form=form)
-    return render_template('order.html', form=form)
+def eventSelection():
+    return "Please order under /grillen/a-valid-date, where the date is taken from /events"
 
 @app.route('/grillen/<event_date>', methods=['GET', 'POST'])
 def eventFoodOrder(event_date):
@@ -111,7 +97,7 @@ def eventFoodOrder(event_date):
         new_order = DB_Bestellungen(name=form.name.data,
                                     bratwurst=form.bratwurst.data,
                                     schinkengriller=form.schinkengriller.data,
-                                    broetchen= broetchen,# (int(form.broetchen.data)),  #*(int(form.bratwurst.data)+int(form.schinkengriller.data)),
+                                    broetchen= broetchen,
                                     selbstversorger=form.selbstversorger.data,
                                     event_id=get_event_id_for_date(event_date))
         
@@ -129,13 +115,70 @@ def eventFoodOrder(event_date):
         return render_template('order.html', bestellt=True, form=form)
     return render_template('order.html', form=form)
 
+@app.route('/summary/<event_date>', methods=['GET'])
+def eventSummary(event_date):
+    if os.path.exists(config.BESTELLUNGEN_FILE):
+        #namen = db.session.execute("SELECT name FROM bestellungen")
+        #bestellungen = db.session.execute("SELECT bratwurst FROM bestellungen")
+        #output = ""
+        
+        #get event id
+        db_req = db.session.execute("SELECT * FROM events;")
+        keys = db_req.keys()
+        entries = db_req.fetchall()
+        
+        # XXX Very dirty eventid retrieval...
+        #print("Keys: {}".format(keys))
+        #print("Entries: {}".format(entries))
+        event_id = None
+        for entry in entries:
+            if entry[1] == event_date:
+                event_id = entry[0]
+                break
+        print("EVENT ID: {}".format(event_id))
+        
+        # TODO - don't construct query, use sqlalchemy instead!!
+        db_req = db.session.execute("SELECT * FROM bestellungen WHERE event_id=={};".format(event_id))
+        keys = db_req.keys()
+        entries = db_req.fetchall()
+        print(keys)
+        print(entries)
+                
+        totals = []
+        for i, key in enumerate(keys):
+            if key == 'id':
+                totals.append("")
+                continue
+            elif key == 'name':
+                totals.append("Total")
+                continue
+            elif key == 'event_id':
+                totals.append("")
+                continue
+            total = 0
+            for entry in entries:
+                total = total + entry[i]
+            totals.append(total)
 
+        totals = tuple(totals)
+        entries.append(totals)
+
+  
+        #TODO: Richtiger Brötchenzähler
+        #TODO: Schöner machen
+        return render_template('summary.html', keys=keys, entries=entries, title="Bestellungen")
+    
+    elif not os.path.exists(config.BESTELLUNGEN_FILE):
+        return "No orders!"
+        
+        
 @app.route('/summary', methods=['GET'])
 def summary():
     if os.path.exists(config.BESTELLUNGEN_FILE):
         #namen = db.session.execute("SELECT name FROM bestellungen")
         #bestellungen = db.session.execute("SELECT bratwurst FROM bestellungen")
         #output = ""
+        
         db_req = db.session.execute("SELECT * FROM bestellungen")
         keys = db_req.keys()
         entries = db_req.fetchall()
@@ -149,6 +192,9 @@ def summary():
             elif key == 'name':
                 totals.append("Total")
                 continue
+            elif key == 'event_id':
+                totals.append("")
+                continue
             total = 0
             for entry in entries:
                 total = total + entry[i]
@@ -157,17 +203,7 @@ def summary():
         totals = tuple(totals)
         entries.append(totals)
         print(entries)
-        #for x in namen.fetchall():
-        #    name += "%s" % (x)
-        #for y in bestellungen.fetchall():
-        #    bestellung += "%s" % (y)
-        #        output +=  "<strong>%s</strong>: %s " % (request.keys()[y], x[y])
-        #    output += "<br>"
-        #output += "<br>Teilnehmeranzahl: %s<br><br>" % x[0]
-        
-        #for key in request.keys()[2:]:
-        #    output += "%s: %s<br>" % (key, db.session.execute("SELECT SUM(%s) FROM bestellungen" % key).fetchall()[0][0]) #execute funktionert; sum rechnet alle zuammen, [0][0] "entfernt" die liest und tuple
-         
+
         #TODO: Richtiger Brötchenzähler
         #TODO: Schöner machen
         return render_template('summary.html', keys=keys, entries=entries, title="Bestellungen")
