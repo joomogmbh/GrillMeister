@@ -38,10 +38,11 @@
 <head>
     <h1>WURSTTHEKE</h1>
     <form action="" method="post" novalidate>
-    
-        <table>
+     <div class="row">
+	   <div class="col s12 m6 l3">
+        <table style="table-layout: fixed;">
             <tr>
-                <td>{{ form.name.label }}</td>
+                <td style="width: 170px;">{{ form.name.label }}</td>
                 <td>{{ form.name(size=15) }}</td>
             </tr>
             <tr>
@@ -55,28 +56,23 @@
             <tr>
 			<td>{{ form.broetchen.label }}</td>
                 	<td>
-				<label class="container">
+				<label class="container" style="float: left; width: initial;">
 					<input id="checkbox_brot" type="checkbox" 
 						name="willst_du_broetchen"    	
 				            onchange="showBrotField()">
 					<span class="checkmark"></span>
 				</label>
+				<input id="brot" type="input" name="broetchen" 
+		            placeholder="Wieviele?" hidden style="float: left">
 			</td>
-			
-	          <td><input id="brot" type="input" name="broetchen" 
-		            placeholder="Wieviele?" hidden></td>
             </tr>
             <tr>
                 <td>{{ form.selbstversorger.label }}</td>
                 <td>{{ form.selbstversorger }}</td>
             </tr>
-            <tr>
-                <td>
-                    {{ form.submit() }} 
-                    <input type="reset" name="test" value="Reset">
-                </td>
-            </tr>
-        </table>    
+        </table>
+        {{ form.submit(class_="waves-effect waves-light btn") }} 
+        <input class="waves-effect waves-light btn" type="reset" name="test" value="Reset">  
         <!---------------------------------------------------->
     <!--    <p>
             	{{ form.name.label }}<br>
@@ -105,8 +101,16 @@
         <p>{{ form.submit() }}</p>
         <input type="reset" name="test" value="Reset">
 	-->
+	    </div>
+	  </div>
     </form>
     {% if bestellt %}
 	<p>Bestellungen wurden entgegenommen.</p>
     {% endif %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+	</script>
 {% endblock %}

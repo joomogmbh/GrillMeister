@@ -2,7 +2,9 @@
 
 {% block content %}
     <h1>{{ title }}</h1>
-        <table id="summary_table">
+      <div class="row">
+	    <div class="col s12 m6 l3">
+          <table id="summary_table" class="responsive-table">
             <tr>
             {% for key in keys %}
                 <th> {{ key }} </th>
@@ -15,5 +17,18 @@
                 {% endfor %}
             </tr>
             {% endfor %}
-        </table>
+          </table>
+        </div>
+      </div>
+      
+      <script>
+        var table = document.getElementById("summary_table");
+        //console.log(table);
+        if(table.rows[0].cells[1].innerHTML.replace(/ /g,'')=="date"){
+          for (var i = 1; i < table.rows.length; i++) { 
+            table.rows[i].cells[1].innerHTML = '<a href="/grillen/'+table.rows[i].cells[1].innerHTML.replace(/ /g,'')+'">'+table.rows[i].cells[1].innerHTML+'</a>';
+          }
+        }
+      </script>
+      
 {% endblock %}

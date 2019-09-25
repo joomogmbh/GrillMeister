@@ -3,17 +3,39 @@
 {% block content %}
     <h1>Eventerstellung</h1>
     <form action="" method="post" novalidate>
-	    <p>
-	    	    {{ form.date.label }}<br>
-		        {{ form.date }}
-	    </p>
-	    <p>
-	    	    {{ form.organizer.label }}<br>
+      <div class="row">
+	    <div class="col s12 m6 l3">
+	    	    {{ form.date.label }}
+	    </div>
+	  <div class="row">
+	  </div>
+	    <div class="col s12 m6 l3">
+		        {{ form.date(class_="datepicker") }}
+		</div>
+      </div>
+      <div class="row">
+	    <div class="col s12 m6 l3">
+	    	    {{ form.organizer.label }}
+	    </div>
+      </div>
+      <div class="row">
+	    <div class="col s12 m6 l3">
 		        {{ form.organizer(size=15) }}
-	    </p>
-        <p>{{ form.submit() }}</p>
+		</div>
+      </div>
+      <div class="row">
+	    <div class="col s12 m6 l3">
+        {{ form.submit(class_="waves-effect waves-light btn") }}
+      	</div>
+      </div>
     </form>
     {% if msg %}
 	<p>{{ msg }}</p>
     {% endif %}
+ <script>
+   document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.datepicker');
+    var instances = M.Datepicker.init(elems,{format: "yyyy-mm-dd"});
+   });
+ </script>
 {% endblock %}

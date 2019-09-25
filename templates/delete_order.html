@@ -3,6 +3,8 @@
 {% block content %}
     <h1>Bestellungen löschen</h1>
     <form action="" method="post" novalidate>
+      <div class="row">
+       <div class="col s12 m6 l3">
         <p>
             	{{ form.delete_secret.label }}<br>
             	{{ form.delete_secret(size=15) }}
@@ -11,7 +13,9 @@
 	    	    {{ form.confirm_delete.label }}<br>
 		        {{ form.confirm_delete }}
 	    </p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit(class_="waves-effect waves-light btn") }}</p>
+       </div>
+      </div>
     </form>
     {% if deleted %}
 	<p>Bestellungen wurden gelöscht. Selber Schuld.</p>
